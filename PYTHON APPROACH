@@ -1,0 +1,367 @@
+### Importing data science libraries
+
+#Importing the necessary python libraries
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+import warnings
+warnings.filterwarnings("ignore")
+
+
+train = pd.read_csv('cs-training.csv')
+test = pd.read_csv('cs-test.csv')
+
+train_original = train.copy()
+test_original = test.copy()
+
+### I'll take a snapshot of 10 rows of the training and test dataset to examine the data
+
+train.head(10)
+
+test.head(10)
+
+
+
+test.shape
+
+train.shape
+
+
+
+train.columns
+
+test.columns
+
+train.dtypes
+
+test.dtypes
+
+train['SeriousDlqin2yrs'] = train['SeriousDlqin2yrs'].map({1:'Y' , 0: 'N'})
+
+# Showing the statistical parameters of each of the variables
+train.describe()
+
+train['age'].hist(bins=100)
+
+#Box plot analysis
+
+train.boxplot(column='age', by = 'SeriousDlqin2yrs')
+
+train.apply(lambda x: sum(x.isnull()), axis=0)
+
+test.apply(lambda x: sum(x.isnull()), axis=0)
+
+
+
+# Age distibution across group
+
+bins = [0,10, 20,30, 40, 50, 60, 70, 80, 90, 100, 120]
+group=['Children','Teens', 'Young Adult', 'Adult', 'Family-man','Retiree','Grand-Pa', 'Aged','junior-Aged','mid Aged','Senior Aged']
+train['age_bin'] = pd.cut(train['age'], bins, labels=group)
+Age_bin = pd.crosstab(train['age_bin'],train['SeriousDlqin2yrs'])
+Age_bin.div(Age_bin.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(20,10))
+
+train['MonthlyIncome'].hist(bins=5)
+
+train['MonthlyIncome'].max()
+
+train['MonthlyIncome'].min()
+
+bins = [0,100000,500000,1000000,3000000,5000000]
+group=['Average', 'Mid Average', 'Above Average','Comfortable','Excellent']
+train['monthly_Income_bin'] = pd.cut(train['MonthlyIncome'], bins, labels=group)
+monthly_bin = pd.crosstab(train['monthly_Income_bin'],train['SeriousDlqin2yrs'])
+monthly_bin.div(monthly_bin.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(20,10))
+
+
+train.boxplot(column='MonthlyIncome', by = 'SeriousDlqin2yrs')
+
+train['DebtRatio'].max()
+
+train['DebtRatio'].min()
+
+train['DebtRatio'].hist(bins=10)
+
+
+
+
+
+
+train['SeriousDlqin2yrs'].value_counts()
+
+train['DebtRatio'].hist(bins=20)
+
+
+train.head()
+
+
+
+train.NumberOfTimes90DaysLate.hist(bins=20)
+
+train['NumberOfTimes90DaysLate'] = train['NumberOfTimes90DaysLate'].astype('int')
+
+bins = [0,20,40,60,80,90,100]
+group=['Excellent','Very Good','Good', 'Fair','Weak','Poor']
+train['Number_of_times90Days_bin'] = pd.cut(train['NumberOfTimes90DaysLate'], bins, labels=group)
+Number_of_times90Days_bin = pd.crosstab(train['Number_of_times90Days_bin'],train['SeriousDlqin2yrs'])
+Number_of_times90Days_bin.div(Number_of_times90Days_bin.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(20,10))
+
+train['NumberRealEstateLoansOrLines'].max()
+
+train['NumberRealEstateLoansOrLines'].head()
+
+train['NumberRealEstateLoansOrLines'].tail()
+
+train['NumberRealEstateLoansOrLines'].hist(bins=20)
+
+train['NumberRealEstateLoansOrLines'].value_counts()
+
+
+
+bins = [0,20,30,40,50]
+group=['very low','low','good','very good']
+train['NumberRealEstateLoansOrLines_bin'] = pd.cut(train['NumberRealEstateLoansOrLines'], bins, labels=group)
+NumberRealEstateLoansOrLines_bin = pd.crosstab(train['NumberRealEstateLoansOrLines_bin'],train['SeriousDlqin2yrs'])
+NumberRealEstateLoansOrLines_bin.div(NumberRealEstateLoansOrLines_bin.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(20,10))
+
+train['NumberOfDependents'].head()
+
+train['NumberOfDependents'].tail()
+
+train['NumberOfDependents'].max()
+
+train['NumberOfDependents'].min()
+
+train['NumberOfDependents'].value_counts()
+
+bins = [0,5,10,15,20]
+group=['very low','low','good','very good']
+train['NumberOfDependents_bin'] = pd.cut(train['NumberOfDependents'], bins, labels=group)
+NumberOfDependents_bin = pd.crosstab(train['NumberOfDependents_bin'],train['SeriousDlqin2yrs'])
+NumberOfDependents_bin.div(NumberOfDependents_bin.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(20,10))
+
+train['NumberOfOpenCreditLinesAndLoans'].min()
+
+train['NumberOfOpenCreditLinesAndLoans'].max()
+
+train['NumberOfOpenCreditLinesAndLoans'].head()
+
+train['NumberOfOpenCreditLinesAndLoans'].tail()
+
+train['NumberOfOpenCreditLinesAndLoans'].hist(bins=5)
+
+
+train.boxplot(column='NumberOfOpenCreditLinesAndLoans', by = 'SeriousDlqin2yrs')
+
+
+
+
+
+
+train['NumberOfOpenCreditLinesAndLoans'].value_counts()
+
+bins = [0,5,10,15,20]
+group=['very low','low','good','very good']
+train['NumberOfOpenCreditLinesAndLoans_bin'] = pd.cut(train['NumberOfOpenCreditLinesAndLoans'], bins, labels=group)
+NumberOfOpenCreditLinesAndLoans_bin= pd.crosstab(train['NumberOfOpenCreditLinesAndLoans_bin'],train['SeriousDlqin2yrs'])
+NumberOfOpenCreditLinesAndLoans_bin.div(NumberOfOpenCreditLinesAndLoans_bin.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(20,10))
+
+counts = train['SeriousDlqin2yrs'].value_counts()
+sns.countplot(x="SeriousDlqin2yrs", data=train)
+
+train['NumberOfTime30-59DaysPastDueNotWorse'].min()
+
+train['NumberOfTime30-59DaysPastDueNotWorse'].max()
+
+train['NumberOfTime30-59DaysPastDueNotWorse'].head()
+
+train['NumberOfTime30-59DaysPastDueNotWorse'].tail()
+
+train['NumberOfTime30-59DaysPastDueNotWorse'].value_counts()
+
+bins = [0,20,40,60,80,100]
+group=['very low','low','good','very good','excellent']
+train['NumberOfTime30-59DaysPastDueNotWorse_bin'] = pd.cut(train['NumberOfTime30-59DaysPastDueNotWorse'], bins, labels=group)
+NumberOfTime30DaysPastDueNotWorse_bin = pd.crosstab(train['NumberOfTime30-59DaysPastDueNotWorse_bin'],train['SeriousDlqin2yrs'])
+NumberOfTime30DaysPastDueNotWorse_bin.div(NumberOfTime30DaysPastDueNotWorse_bin.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(20,10))
+
+train['NumberOfTime60-89DaysPastDueNotWorse'].min()
+
+train['NumberOfTime60-89DaysPastDueNotWorse'].max()
+
+train['NumberOfTime60-89DaysPastDueNotWorse'].value_counts()
+
+bins = [0,20,40,60,80,100]
+group=['very low','low','good','very good','excellent']
+train['NumberOfTime60DaysPastDueNotWorse_bin'] = pd.cut(train['NumberOfTime60-89DaysPastDueNotWorse'], bins, labels=group)
+NumberOfTime60DaysPastDueNotWorse_bin = pd.crosstab(train['NumberOfTime60DaysPastDueNotWorse_bin'],train['SeriousDlqin2yrs'])
+NumberOfTime60DaysPastDueNotWorse_bin.div(NumberOfTime60DaysPastDueNotWorse_bin.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(20,10))
+
+train['RevolvingUtilizationOfUnsecuredLines'].min()
+
+train['RevolvingUtilizationOfUnsecuredLines'].max()
+
+train['RevolvingUtilizationOfUnsecuredLines'] = train['RevolvingUtilizationOfUnsecuredLines'].astype('float')
+
+bins = [0,0.2,0.4,0.6,0.8,1.0]
+group=['very low','low','good','very good','excellent']
+train['RevolvingUtilizationOfUnsecuredLines_bin'] = pd.cut(train['RevolvingUtilizationOfUnsecuredLines'], bins, labels=group)
+RevolvingUtilizationOfUnsecuredLines_bin = pd.crosstab(train['RevolvingUtilizationOfUnsecuredLines_bin'],train['SeriousDlqin2yrs'])
+RevolvingUtilizationOfUnsecuredLines_bin.div(RevolvingUtilizationOfUnsecuredLines_bin.sum(1).astype(float), axis=0).plot(kind="bar", stacked=True, figsize=(20,10))
+
+
+
+matrix = train.corr()
+f, ax = plt.subplots(figsize=(9,6))
+sns.heatmap(matrix, vmax=.8, square=True, cmap="BuPu")
+
+train.isnull().sum()
+
+train=train.drop(['age_bin','monthly_Income_bin','Number_of_times90Days_bin','NumberRealEstateLoansOrLines_bin','NumberOfDependents_bin','NumberOfOpenCreditLinesAndLoans_bin','NumberOfTime30-59DaysPastDueNotWorse_bin','NumberOfTime60DaysPastDueNotWorse_bin'], axis=1)
+
+train.head()
+
+train.isnull().sum()
+
+train['MonthlyIncome'].fillna(train['MonthlyIncome'].mode()[0], inplace=True)
+train['NumberOfDependents'].fillna(train['NumberOfDependents'].mode()[0], inplace=True)
+
+
+
+
+train.isnull().sum()
+
+test.isnull().sum()
+
+test['MonthlyIncome'].fillna(test['MonthlyIncome'].mode()[0], inplace=True)
+test['NumberOfDependents'].fillna(test['NumberOfDependents'].mode()[0], inplace=True)
+
+test.isnull().sum()
+
+train = train.drop(['Id','NumberOfDependents'], axis=1)
+test = test.drop(['SeriousDlqin2yrs', 'Id','NumberOfDependents'], axis= 1)
+
+test.head()
+
+train['SeriousDlqin2yrs'] = train.SeriousDlqin2yrs.map({'Y':1, 'N':0})
+
+X = train.drop('SeriousDlqin2yrs',1)
+y = train.SeriousDlqin2yrs
+
+
+from sklearn.model_selection import train_test_split
+x_train, x_cv, y_train, y_cv = train_test_split(X,y, test_size = 0.3)
+
+from sklearn.linear_model import LogisticRegression 
+from sklearn.metrics import accuracy_score
+model = LogisticRegression() 
+model.fit(x_train, y_train)
+
+pred_cv = model.predict(x_cv)
+pred_prob = model.predict_proba(x_cv)
+
+accuracy_score(y_cv,pred_cv)
+
+
+
+from sklearn.metrics import classification_report, confusion_matrix
+
+print(confusion_matrix(y_cv,pred_cv))
+print('\n')
+print(classification_report(y_cv,pred_cv))
+
+from sklearn.model_selection import StratifiedKFold
+
+i=1
+
+kf = StratifiedKFold(n_splits=5, random_state=1, shuffle=True)
+for train_index, test_index in kf.split(X,y):
+    print('\n{} of kfold{}'.format(i, kf.n_splits))
+    xtr,xvl = X.loc[train_index],X.loc[test_index]
+    ytr,yvl = y[train_index],y[test_index]
+    model1 = LogisticRegression(random_state=1)
+    model1.fit(xtr, ytr)
+    pred_test = model1.predict(xvl)
+    score = accuracy_score(yvl, pred_test)
+    print('accuracy_score', score)
+    
+    pred_test=model1.predict(test)
+    pred=model1.predict_proba(xvl)[:,1]
+    i+=1
+
+from sklearn.ensemble import RandomForestClassifier
+i=1 
+kf = StratifiedKFold(n_splits=5,random_state=1,shuffle=True) 
+for train_index,test_index in kf.split(X,y):     
+    print('\n{} of kfold {}'.format(i,kf.n_splits))     
+    xtr,xvl = X.loc[train_index],X.loc[test_index]     
+    ytr,yvl = y[train_index],y[test_index]         
+    model2 = RandomForestClassifier(random_state=1, max_depth=10)     
+    model2.fit(xtr, ytr)     
+    pred1 = model2.predict(xvl)
+    predicted_probs = model2.predict_proba(test)[:,1]
+    score = accuracy_score(yvl,pred1)     
+    print('accuracy_score',score)     
+    i+=1 
+
+    pred_test = model2.predict(test)
+
+from sklearn import metrics
+fpr, tpr, _ = metrics.roc_curve(yvl, pred1)
+auc = metrics.roc_auc_score(yvl, pred1)
+plt.figure(figsize=(12,8))
+plt.plot(fpr,tpr,label="validation, auc="+str(auc))
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.legend(loc=4)
+plt.show()
+
+from xgboost import XGBClassifier
+
+from sklearn.model_selection import GridSearchCV
+
+paramgrid = {'max_depth': list(range(1, 20, 2)), 'n_estimators': list(range(1, 100, 20))}
+
+from sklearn.model_selection import train_test_split 
+x_train, x_cv, y_train, y_cv = train_test_split(X,y, test_size =0.3, random_state=1)
+
+grid_search=GridSearchCV(XGBClassifier(random_state=1),paramgrid, n_jobs=-1)
+
+grid_search.fit(x_train,y_train)
+
+grid_search.best_estimator_
+
+i=1 
+kf = StratifiedKFold(n_splits=5,random_state=1,shuffle=True) 
+for train_index,test_index in kf.split(X,y):     
+    print('\n{} of kfold {}'.format(i,kf.n_splits))     
+    xtr,xvl = X.loc[train_index],X.loc[test_index]     
+    ytr,yvl = y[train_index],y[test_index]         
+    model3 = XGBClassifier(n_estimators=81, max_depth=3)     
+    model3.fit(xtr, ytr)     
+    pred_test = model3.predict(xvl)     
+    score = accuracy_score(yvl,pred_test)     
+    print('accuracy_score',score)     
+    i+=1 
+    
+
+from sklearn import metrics
+fpr, tpr, _ = metrics.roc_curve(yvl, pred_test)
+auc = metrics.roc_auc_score(yvl, pred_test)
+plt.figure(figsize=(12,8))
+plt.plot(fpr,tpr,label="validation, auc="+str(auc))
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.legend(loc=4)
+plt.show()
+
+yvl.shape
+
+predicted_probs.shape
+
+importances=pd.Series(model2.feature_importances_, index=X.columns) 
+importances.plot(kind='bar', figsize=(20,20))
+
